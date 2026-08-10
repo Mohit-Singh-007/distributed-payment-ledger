@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: users
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration-ms: ${JWT_EXPIRATION}
