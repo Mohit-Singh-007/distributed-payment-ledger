@@ -2,12 +2,14 @@ package com.payme.users.service.impl;
 
 import com.payme.users.dto.LoginReq;
 import com.payme.users.dto.RegisterReq;
+import com.payme.users.dto.UserRes;
 import com.payme.users.enums.UserRole;
 import com.payme.users.model.User;
 import com.payme.users.repository.UserRepository;
 import com.payme.users.service.UserImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,4 +45,16 @@ public class UserService implements UserImpl {
 
         userRepository.save(user);
     }
+
+    @Override
+    public UserRes me(Authentication auth) {
+        User u = userRepository.findByEmail(auth.getName()).orElseThrow();
+
+        return new UserRes(
+                u.getId(),
+                u.getEmail(),
+                u.getRole().name()
+        );
+    }
+
 }
