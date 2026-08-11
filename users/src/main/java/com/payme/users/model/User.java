@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class User {
 
     @Id
@@ -43,11 +44,5 @@ public class User {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-    public User(String username, String email, String hashedPassword) {
-        this.username = username;
-        this.email = email;
-        this.hashedPassword = hashedPassword;
-    }
 
 }

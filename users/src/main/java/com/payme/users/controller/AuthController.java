@@ -6,7 +6,10 @@ import com.payme.users.dto.RegisterReq;
 import com.payme.users.model.User;
 import com.payme.users.repository.UserRepository;
 import com.payme.users.security.JwtService;
+import com.payme.users.service.impl.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,28 +27,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
     private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
+
+    private final UserService userService;
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterReq req){
-
-        if(userRepository.existsByEmail(req.email())){
-            return ResponseEntity.badRequest().body("Email already exists...");
-        }
-
-        User user = new User(
-                req.username(),
-                req.email(),
-                passwordEncoder.encode(req.password())
-        );
-
-        userRepository.save(user);
-
-        return ResponseEntity.ok("User registered successfully...");
-
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterReq req){
+        userService.register(req);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("User registered successfully...");
     }
 
 
