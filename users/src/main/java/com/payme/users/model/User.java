@@ -19,7 +19,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(unique = true, nullable = false)
     private String username;
 
     @Column(unique = true, nullable = false)
@@ -44,5 +43,11 @@ public class User {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public User(String username, String email, String hashedPassword) {
+        this.username = username;
+        this.email = email;
+        this.hashedPassword = hashedPassword;
+    }
 
 }
