@@ -9,4 +9,5 @@ public interface UserImpl {
     UserRes me(Authentication auth);
 
     LoginRes refresh(RefreshReq req);
+    void logout(RefreshReq req);
 }

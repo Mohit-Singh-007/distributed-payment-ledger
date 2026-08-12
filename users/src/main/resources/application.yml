@@ -2,6 +2,25 @@ spring:
   application:
     name: users
 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/payme_users
+    username: postgres
+    password: mohit123
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
 jwt:
-  secret: ${JWT_SECRET}
-  expiration-ms: ${JWT_EXPIRATION}
+  secret: sgftIzlqSiL2iuPL3oHeZCptli85GlM4sXOnWQB4YRP
+  expiration-ms: 900000
+
+logging:
+  level:
+    org.springframework.security: DEBUG

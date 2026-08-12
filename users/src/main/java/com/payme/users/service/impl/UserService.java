@@ -69,6 +69,12 @@ public class UserService implements UserImpl {
         userRepository.save(user);
     }
 
+
+    @Override
+    public void logout(RefreshReq req) {
+        refreshTokenService.revokeToken(req.refreshToken());
+    }
+
     @Override
     public UserRes me(Authentication auth) {
         User u = userRepository.findByEmail(auth.getName()).orElseThrow();

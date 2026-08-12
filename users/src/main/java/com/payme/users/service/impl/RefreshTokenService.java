@@ -23,10 +23,10 @@ public class RefreshTokenService implements RefreshTokenImpl {
     @Override
     public String issueRefreshToken(String userId) {
         String rawToken = generateSecureToken();
-        String hashedToken = hash(rawToken);
+        String hashToken = hash(rawToken);
 
         RefreshToken res = RefreshToken.builder()
-                .tokenHash(hashedToken)
+                .hashedToken(hashToken)
                 .userId(userId)
                 .expiryDate(LocalDateTime.now().plusDays(REFRESH_TOKEN_TTL_DAYS))
                 .isRevoked(false)
@@ -41,7 +41,7 @@ public class RefreshTokenService implements RefreshTokenImpl {
     public RefreshToken validateAndConsume(String rawToken) {
         String hashedToken = hash(rawToken);
 
-        RefreshToken storedToken = refreshTokenRepository.findTokenByHash(hashedToken)
+        RefreshToken storedToken = refreshTokenRepository.findByHashedToken(hashedToken)
                 .orElseThrow(()-> new IllegalArgumentException("Invalid refresh token..."));
 
         if(storedToken.isRevoked() || storedToken.getExpiryDate().isBefore(LocalDateTime.now())){
