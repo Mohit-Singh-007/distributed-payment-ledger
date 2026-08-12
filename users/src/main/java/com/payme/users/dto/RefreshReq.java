@@ -1,7 +1,6 @@
 package com.payme.users.dto;
 
-public record LoginRes(
-        String accessToken,
+public record RefreshReq(
         String refreshToken
 ) {
 }

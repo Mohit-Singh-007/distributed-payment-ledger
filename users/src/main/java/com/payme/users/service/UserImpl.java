@@ -1,12 +1,12 @@
 package com.payme.users.service;
 
-import com.payme.users.dto.LoginReq;
-import com.payme.users.dto.RegisterReq;
-import com.payme.users.dto.UserRes;
+import com.payme.users.dto.*;
 import org.springframework.security.core.Authentication;
 
 public interface UserImpl {
-    void login(LoginReq req);
+    LoginRes login(LoginReq req);
     void register(RegisterReq req);
     UserRes me(Authentication auth);
+
+    LoginRes refresh(RefreshReq req);
 }
