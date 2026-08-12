@@ -3,8 +3,6 @@ package com.payme.users.controller;
 import com.payme.users.dto.LoginReq;
 import com.payme.users.dto.LoginRes;
 import com.payme.users.dto.RegisterReq;
-import com.payme.users.model.User;
-import com.payme.users.repository.UserRepository;
 import com.payme.users.security.JwtService;
 import com.payme.users.service.impl.UserService;
 import jakarta.validation.Valid;
@@ -15,7 +13,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +25,6 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-
     private final UserService userService;
 
 

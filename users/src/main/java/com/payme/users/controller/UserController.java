@@ -1,8 +1,6 @@
 package com.payme.users.controller;
 
 import com.payme.users.dto.UserRes;
-import com.payme.users.model.User;
-import com.payme.users.repository.UserRepository;
 import com.payme.users.service.impl.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
