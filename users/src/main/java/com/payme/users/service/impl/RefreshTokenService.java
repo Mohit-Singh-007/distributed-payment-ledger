@@ -55,6 +55,16 @@ public class RefreshTokenService implements RefreshTokenImpl {
 
     }
 
+    @Override
+    public void revokeToken(String rawToken) {
+        String hash = hash(rawToken);
+        refreshTokenRepository.findByHashedToken(hash)
+                .ifPresent(token -> {
+                    token.setRevoked(true);
+                    refreshTokenRepository.save(token);
+                });
+    }
+
     private String generateSecureToken(){
         byte[] bytes = new byte[64];
         new SecureRandom().nextBytes(bytes);

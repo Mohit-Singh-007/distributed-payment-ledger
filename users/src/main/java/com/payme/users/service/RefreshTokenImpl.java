@@ -5,5 +5,5 @@ import com.payme.users.model.RefreshToken;
 public interface RefreshTokenImpl {
     String issueRefreshToken(String userId);
     RefreshToken validateAndConsume(String rawToken);
-
+    void revokeToken(String rawToken);
 }

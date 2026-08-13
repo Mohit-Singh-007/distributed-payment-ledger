@@ -55,6 +55,7 @@ application-local.properties
 application-local.yml
 application-*.properties
 application-*.yml
+users/src/main/resources/application.yml
 
 # Temporary files
 *.tmp
