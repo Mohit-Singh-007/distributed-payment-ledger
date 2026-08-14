@@ -1,9 +1,9 @@
 spring:
   application:
-    name: users
+    name: wallet
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/payme_users
+    url: jdbc:postgresql://localhost:5432/wallet_db
     username: postgres
     password: mohit123
     driver-class-name: org.postgresql.Driver
@@ -17,13 +17,5 @@ spring:
         format_sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
-jwt:
-  secret: sgftIzlqSiL2iuPL3oHeZCptli85GlM4sXOnWQB4YRP
-  expiration-ms: 900000
-
-logging:
-  level:
-    org.springframework.security: DEBUG
-
 server:
-  port: 8081
+  port: 8082
