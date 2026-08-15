@@ -27,12 +27,13 @@ public class JwtService {
         );
     }
 
-    public String generateToken(String username,String role){
+    public String generateToken(String userId,String email,String role){
         Date now = new Date();
         Date expiry = new Date(now.getTime() + expirationMs);
 
         return Jwts.builder()
-                .subject(username)
+                .subject(userId)
+                .claim("email",email)
                 .claim("role",role)
                 .issuedAt(now)
                 .expiration(expiry)

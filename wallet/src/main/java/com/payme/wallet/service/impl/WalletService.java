@@ -18,6 +18,17 @@ public class WalletService implements WalletServiceImpl {
     private final WalletTransactionExecutor walletTransactionExecutor;
     private static final int MAX_RETRIES = 3;
 
+    @Override
+    public Wallet getWalletById(String walletId) {
+        return walletRepository.findById(walletId)
+                .orElseThrow(() -> new IllegalArgumentException("Wallet not found"));
+    }
+
+    @Override
+    public Wallet getByUserId(String userId) {
+        return walletRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Wallet not found for user"));
+    }
 
     @Override
     public Wallet createWallet(String userId, String currency) {

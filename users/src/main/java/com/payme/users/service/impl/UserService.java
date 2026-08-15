@@ -41,7 +41,7 @@ public class UserService implements UserImpl {
         User user = userRepository.findByEmail(req.email())
                 .orElseThrow();
 
-        String accessToken = jwtService.generateToken(auth.getName(), role);
+        String accessToken = jwtService.generateToken(auth.getName(), user.getEmail(),role);
         String refreshToken = refreshTokenService.issueRefreshToken(user.getId());
 
         return new LoginRes(accessToken, refreshToken);
@@ -101,7 +101,7 @@ public class UserService implements UserImpl {
 
         String role = "ROLE_"+user.getRole().name();
 
-        String newAccessToken = jwtService.generateToken(user.getEmail(),role);
+        String newAccessToken = jwtService.generateToken(user.getId(),user.getEmail(),role);
         String newRefreshToken = refreshTokenService.issueRefreshToken(user.getId());
 
         return new LoginRes(newAccessToken, newRefreshToken);
