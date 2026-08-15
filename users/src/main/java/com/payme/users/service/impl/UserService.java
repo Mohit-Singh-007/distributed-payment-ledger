@@ -41,7 +41,7 @@ public class UserService implements UserImpl {
         User user = userRepository.findByEmail(req.email())
                 .orElseThrow();
 
-        String accessToken = jwtService.generateToken(auth.getName(), user.getEmail(),role);
+        String accessToken = jwtService.generateToken(user.getId(), user.getEmail(),role);
         String refreshToken = refreshTokenService.issueRefreshToken(user.getId());
 
         return new LoginRes(accessToken, refreshToken);
@@ -77,7 +77,7 @@ public class UserService implements UserImpl {
 
     @Override
     public UserRes me(Authentication auth) {
-        User u = userRepository.findByEmail(auth.getName()).orElseThrow();
+        User u = userRepository.findById(auth.getName()).orElseThrow();
 
         return new UserRes(
                 u.getId(),

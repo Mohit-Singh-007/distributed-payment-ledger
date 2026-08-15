@@ -10,4 +10,5 @@ public interface WalletServiceImpl {
     Wallet debit(String walletId,BigDecimal amount);
     Wallet getWalletById(String walletId);
     Wallet getByUserId(String userId);
+    boolean isOwner(String walletId, String userId);
 }

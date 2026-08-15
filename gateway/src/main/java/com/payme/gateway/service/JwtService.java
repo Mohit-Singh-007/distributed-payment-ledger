@@ -21,8 +21,11 @@ public class JwtService {
         return Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
     }
 
-    public String extractUsername(String token) {
+    public String extractUserId(String token) {
         return parseClaims(token).getSubject();
+    }
+    public String extractEmail(String token) {
+        return parseClaims(token).get("email", String.class);
     }
     public String extractRole(String token){
         return parseClaims(token).get("role",String.class);

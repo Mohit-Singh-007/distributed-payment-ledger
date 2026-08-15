@@ -31,6 +31,13 @@ public class WalletService implements WalletServiceImpl {
     }
 
     @Override
+    public boolean isOwner(String walletId, String userId) {
+        return walletRepository.findById(walletId)
+                .map(w -> w.getUserId().equals(userId))
+                .orElse(false);
+    }
+
+    @Override
     public Wallet createWallet(String userId, String currency) {
         Wallet wallet = Wallet.createNew(userId, currency);
         return walletRepository.save(wallet);

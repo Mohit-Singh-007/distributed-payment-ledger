@@ -27,7 +27,7 @@ public class Wallet {
     private BigDecimal balance;
 
     @Version
-    private String version;
+    private Long version;
 
     @Column(nullable = false,length = 3)
     private String currency;

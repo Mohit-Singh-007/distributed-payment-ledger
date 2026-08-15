@@ -24,11 +24,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String userEmail = request.getHeader("X-User-Email");
+        String userId = request.getHeader("X-User-Id");
         String role = request.getHeader("X-User-Role");
 
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = User.withUsername(userEmail)
+        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = User.withUsername(userId)
                     .password("")
                     .authorities(role != null ? role : "USER")
                     .build();
