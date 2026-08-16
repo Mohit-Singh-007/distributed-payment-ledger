@@ -1,9 +1,6 @@
 package com.payme.wallet.controller;
 
-import com.payme.wallet.dto.CreateWalletReq;
-import com.payme.wallet.dto.CreditReq;
-import com.payme.wallet.dto.DebitReq;
-import com.payme.wallet.dto.WalletRes;
+import com.payme.wallet.dto.*;
 import com.payme.wallet.model.Wallet;
 import com.payme.wallet.service.impl.WalletService;
 import jakarta.validation.Valid;
@@ -55,6 +52,14 @@ public class WalletController {
         Wallet updated = walletService.debit(walletId, req.amount());
         return ResponseEntity.ok(toRes(updated));
     }
+
+    // internal call
+    @GetMapping("/by-user/{userId}")
+    public ResponseEntity<WalletIdRes> getUserById(@PathVariable String userId){
+        Wallet wallet = walletService.getByUserId(userId);
+        return ResponseEntity.ok(new WalletIdRes(wallet.getId()));
+    }
+
 
 
     private WalletRes toRes(Wallet wallet) {

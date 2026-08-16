@@ -24,12 +24,12 @@ public class PaymentController {
             @Valid @RequestBody PaymentReq req,
             Authentication auth
             ){
-        String payerRole = auth.getAuthorities().stream()
+        String senderRole = auth.getAuthorities().stream()
                 .findFirst()
                 .map(a -> a.getAuthority().replace("ROLE_", ""))
                 .orElse("USER");
 
-        Payment payment = paymentService.initiatePayment(key, auth.getName(), payerRole, req);
+        Payment payment = paymentService.initiatePayment(key, auth.getName(), senderRole, req);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(toRes(payment));
     }
@@ -44,8 +44,8 @@ public class PaymentController {
     private PaymentRes toRes(Payment payment) {
         return new PaymentRes(
                 payment.getId(),
-                payment.getPayerId(),
-                payment.getPayeeId(),
+                payment.getSenderId(),
+                payment.getReceiverId(),
                 payment.getAmount(),
                 payment.getStatus().name(),
                 payment.getFailureReason()

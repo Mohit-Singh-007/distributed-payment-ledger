@@ -1,6 +1,7 @@
 package com.payme.payment.comm;
 
 import com.payme.payment.dto.AmountReq;
+import com.payme.payment.dto.WalletIdRes;
 import com.payme.payment.dto.WalletRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -34,6 +35,16 @@ public class WalletServiceClient {
                 .body(new AmountReq(amount))
                 .retrieve()
                 .body(WalletRes.class);
+    }
+    public String getWalletIdForUser(String userId, String callerId, String callerRole) {
+        var res = restClient.get()
+                .uri("/wallets/by-user/{userId}", userId)
+                .header("X-User-Id", callerId)
+                .header("X-User-Role", callerRole)
+                .retrieve()
+                .body(WalletIdRes.class);
+       
+        return res != null ? res.walletId() : null;
     }
 
 

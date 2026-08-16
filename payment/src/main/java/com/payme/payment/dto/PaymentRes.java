@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 public record PaymentRes(
         String id,
-        String payerId,
-        String payeeId,
+        String senderId,
+        String receiverId,
         BigDecimal amount,
         String status,
         String failureReason

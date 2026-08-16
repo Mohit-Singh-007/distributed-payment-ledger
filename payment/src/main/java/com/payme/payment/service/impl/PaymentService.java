@@ -25,35 +25,45 @@ public class PaymentService implements PaymentImpl {
     }
 
     @Override
-    public Payment initiatePayment(String key, String payerId, String payerRole, PaymentReq req) {
+    public Payment initiatePayment(String key, String senderId, String senderRole, PaymentReq req) {
         // idempotency
         var existing = paymentRepository.findByIdempotencyKey(key);
         if(existing.isPresent()) return existing.get();
 
-        Payment payment = Payment.createPending(key,payerId,req.payeeId(),req.amount());
+        Payment payment = Payment.createPending(key,senderId,req.receiverId(),req.amount());
         paymentRepository.save(payment);
 
-        return process(payment,payerRole);
+        return process(payment,senderRole);
 
     }
-    private Payment process(Payment payment,String payerRole){
+    private Payment process(Payment payment,String senderRole){
 
         payment.setStatus(PaymentStatus.PENDING);
         paymentRepository.save(payment);
 
         //1 . debit payer - from own wallet so allow
 
+        String senderWalletId;
+        String recieverWalletId;
         try{
-            walletServiceClient.debit(payment.getPayerId(),payment.getAmount(),payment.getPayerId(),payerRole);
+            senderWalletId = walletServiceClient.getWalletIdForUser(payment.getSenderId(),payment.getSenderId(),senderRole);
+            recieverWalletId = walletServiceClient.getWalletIdForUser(payment.getReceiverId(),payment.getSenderId(),senderRole);
         }catch (RestClientException e) {
+            payment.setStatus(PaymentStatus.FAILED);
+            payment.setFailureReason("Wallet resolution failed: " + e.getMessage());
+            return paymentRepository.save(payment);
+        }
+
+        try {
+            walletServiceClient.debit(senderWalletId, payment.getAmount(), payment.getSenderId(), senderRole);
+        } catch (RestClientException e) {
             payment.setStatus(PaymentStatus.FAILED);
             payment.setFailureReason("Debit failed: " + e.getMessage());
             return paymentRepository.save(payment);
         }
 
-        //2. credit payee — will currently fail ownership check (flagged, addressed later)
         try {
-            walletServiceClient.credit(payment.getPayeeId(), payment.getAmount(), payment.getPayerId(), payerRole);
+            walletServiceClient.credit(recieverWalletId, payment.getAmount(), payment.getSenderId(), senderRole);
         } catch (RestClientException e) {
             payment.setStatus(PaymentStatus.FAILED_PARTIAL);
             payment.setFailureReason("Debit succeeded, credit failed: " + e.getMessage());

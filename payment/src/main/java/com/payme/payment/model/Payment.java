@@ -27,10 +27,10 @@ public class Payment {
     private String idempotencyKey;
 
     @Column(nullable = false)
-    private String payerId;
+    private String senderId;
 
     @Column(nullable = false)
-    private String payeeId;
+    private String receiverId;
 
     @Column(nullable = false, precision = 19, scale = 4)
     private BigDecimal amount;
@@ -52,11 +52,11 @@ public class Payment {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public static Payment createPending(String idempotencyKey, String payerId, String payeeId, BigDecimal amount) {
+    public static Payment createPending(String idempotencyKey, String senderId, String receiverId, BigDecimal amount) {
         Payment payment = new Payment();
         payment.idempotencyKey = idempotencyKey;
-        payment.payerId = payerId;
-        payment.payeeId = payeeId;
+        payment.senderId = senderId;
+        payment.receiverId = receiverId;
         payment.amount = amount;
         payment.status = PaymentStatus.PENDING;
         return payment;
