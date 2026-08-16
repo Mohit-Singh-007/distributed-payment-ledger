@@ -33,12 +33,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String userId = request.getHeader("X-User-Id");
         String role = request.getHeader("X-User-Role");
-        System.out.println("Received X-User-Id: " + request.getHeader("X-User-Id"));
 
         if(userId != null && SecurityContextHolder.getContext().getAuthentication()==null){
+            String authority = "ROLE_" + (role != null ? role : "USER");
             UserDetails userDetails = User.withUsername(userId)
                     .password("")
-                    .authorities(role != null ? role : "USER")
+                    .authorities(authority)
                     .build();
 
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(

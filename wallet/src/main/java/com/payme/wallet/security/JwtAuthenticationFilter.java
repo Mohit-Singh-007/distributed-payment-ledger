@@ -28,9 +28,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String role = request.getHeader("X-User-Role");
 
         if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            String authority = "ROLE_" + (role != null ? role : "USER");
             UserDetails userDetails = User.withUsername(userId)
                     .password("")
-                    .authorities(role != null ? role : "USER")
+                    .authorities(authority)
                     .build();
 
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
