@@ -2,11 +2,14 @@ package com.payme.wallet.controller;
 
 import com.payme.wallet.dto.*;
 import com.payme.wallet.model.Wallet;
+import com.payme.wallet.security.InternalAuth;
 import com.payme.wallet.service.impl.WalletService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class WalletController {
 
     private final WalletService walletService;
+    private final InternalAuth internalAuth;
 
     @PostMapping
     public ResponseEntity<WalletRes> create(@Valid @RequestBody CreateWalletReq req, Authentication auth){
@@ -40,8 +44,18 @@ public class WalletController {
     }
 
     @PostMapping("/{walletId}/credit")
-    @PreAuthorize("@walletService.isOwner(#walletId, authentication.name)")
-    public ResponseEntity<WalletRes> credit(@PathVariable String walletId, @RequestBody CreditReq req) {
+//    @PreAuthorize("@walletService.isOwner(#walletId, authentication.name)") anyone can credit to acc but has to be auth user with wallet
+
+    public ResponseEntity<WalletRes> credit(@PathVariable String walletId, @RequestBody CreditReq req
+    , Authentication auth, HttpServletRequest request) {
+
+        boolean isInternal = internalAuth.isInternalCall(request);
+        boolean isOwner = walletService.isOwner(walletId,auth.getName());
+
+        if (!isInternal && !isOwner) {
+            throw new AccessDeniedException("Not authorized to credit this wallet");
+        }
+
         Wallet updated = walletService.credit(walletId, req.amount());
         return ResponseEntity.ok(toRes(updated));
     }
