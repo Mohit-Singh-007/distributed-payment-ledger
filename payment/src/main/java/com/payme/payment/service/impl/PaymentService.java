@@ -33,15 +33,15 @@ public class PaymentService implements PaymentImpl {
         var existing = paymentRepository.findByIdempotencyKey(key);
         if (existing.isPresent()) return existing.get();
 
-        Payment payment = Payment.createPending(key, senderId, req.receiverId(), req.amount());
+        Payment p = Payment.createPending(key, senderId, req.receiverId(), req.amount());
         try {
-            payment = paymentRepository.save(payment);
+            p = paymentRepository.save(p);
         } catch (DataIntegrityViolationException e) {
             return paymentRepository.findByIdempotencyKey(key)
                     .orElseThrow(() -> new IllegalStateException("Idempotency conflict but record not found", e));
         }
 
-        return process(payment, senderRole);
+        return process(p, senderRole);
     }
 
     private Payment process(Payment p,String senderRole){
